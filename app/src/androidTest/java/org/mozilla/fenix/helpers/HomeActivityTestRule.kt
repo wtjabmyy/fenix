@@ -28,6 +28,7 @@ class HomeActivityTestRule(
 ) :
     ActivityTestRule<HomeActivity>(HomeActivity::class.java, initialTouchMode, launchActivity) {
     private val longTapUserPreference = getLongPressTimeout()
+    val featureSettings = FeatureSettingsHelper()
 
     override fun beforeActivityLaunched() {
         super.beforeActivityLaunched()
@@ -39,6 +40,8 @@ class HomeActivityTestRule(
         super.afterActivityFinished()
         setLongTapTimeout(longTapUserPreference)
         closeNotificationShade()
+        // resetting the default values of feature flags in case they are modified but not reset in a test.
+        featureSettings.resetAllFeatureFlags()
     }
 }
 
@@ -57,6 +60,7 @@ class HomeActivityIntentTestRule(
 ) :
     IntentsTestRule<HomeActivity>(HomeActivity::class.java, initialTouchMode, launchActivity) {
     private val longTapUserPreference = getLongPressTimeout()
+    val featureSettings = FeatureSettingsHelper()
 
     override fun beforeActivityLaunched() {
         super.beforeActivityLaunched()
@@ -68,6 +72,8 @@ class HomeActivityIntentTestRule(
         super.afterActivityFinished()
         setLongTapTimeout(longTapUserPreference)
         closeNotificationShade()
+        // resetting the default values of feature flags in case they are modified but not reset in a test.
+        featureSettings.resetAllFeatureFlags()
     }
 }
 

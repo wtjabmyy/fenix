@@ -12,7 +12,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.helpers.AndroidAssetDispatcher
 import org.mozilla.fenix.helpers.HomeActivityTestRule
 import org.mozilla.fenix.helpers.TestAssetHelper
@@ -41,12 +40,6 @@ import org.mozilla.fenix.ui.robots.notificationShade
 class TabbedBrowsingTest {
     private val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
     private lateinit var mockWebServer: MockWebServer
-    private val settings = InstrumentationRegistry.getInstrumentation().targetContext.settings()
-
-    // saving default values of feature flags
-    private var jumpBackInCFRDefault: Boolean = settings.shouldShowJumpBackInCFR
-    private var recentTabsFeatureDefault: Boolean = settings.showRecentTabsFeature
-    private var showPocketDefault: Boolean = settings.showPocketRecommendationsFeature
 
     /* ktlint-disable no-blank-line-before-rbrace */ // This imposes unreadable grouping.
     @get:Rule
@@ -54,7 +47,7 @@ class TabbedBrowsingTest {
 
     @Before
     fun setUp() {
-        settings.shouldShowJumpBackInCFR = false
+        activityTestRule.featureSettings.setJumpBackCFREnabled(false)
         mockWebServer = MockWebServer().apply {
             dispatcher = AndroidAssetDispatcher()
             start()
@@ -64,10 +57,7 @@ class TabbedBrowsingTest {
     @After
     fun tearDown() {
         mockWebServer.shutdown()
-        // resetting the default values of these features flags
-        settings.shouldShowJumpBackInCFR = jumpBackInCFRDefault
-        settings.showRecentTabsFeature = recentTabsFeatureDefault
-        settings.showPocketRecommendationsFeature = showPocketDefault
+        activityTestRule.featureSettings.resetAllFeatureFlags()
     }
 
     @Test
@@ -149,8 +139,8 @@ class TabbedBrowsingTest {
     @Test
     fun closeTabTest() {
         // disabling these features because they interfere with the snackbar visibility
-        settings.showRecentTabsFeature = false
-        settings.showPocketRecommendationsFeature = false
+        activityTestRule.featureSettings.setPocketEnabled(false)
+        activityTestRule.featureSettings.setRecentTabsFeatureEnabled(false)
 
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
@@ -190,16 +180,11 @@ class TabbedBrowsingTest {
 
     @Test
     fun closePrivateTabTest() {
-        // disabling these features because they interfere with the snackbar visibility
-        settings.showRecentTabsFeature = false
-        settings.showPocketRecommendationsFeature = false
-
         val genericURL = TestAssetHelper.getGenericAsset(mockWebServer, 1)
 
         homeScreen { }.togglePrivateBrowsingMode()
         navigationToolbar {
         }.enterURLAndEnterToBrowser(genericURL.url) {
-            mDevice.waitForIdle()
         }.openTabDrawer {
             verifyExistingOpenTabs("Test_Page_1")
             verifyCloseTabsButton("Test_Page_1")
@@ -208,9 +193,8 @@ class TabbedBrowsingTest {
             snackBarButtonClick("UNDO")
         }
 
-        mDevice.waitForIdle()
-
         browserScreen {
+            verifyTabCounter("1")
         }.openTabDrawer {
             verifyExistingOpenTabs("Test_Page_1")
             swipeTabRight("Test_Page_1")
@@ -218,9 +202,8 @@ class TabbedBrowsingTest {
             snackBarButtonClick("UNDO")
         }
 
-        mDevice.waitForIdle()
-
         browserScreen {
+            verifyTabCounter("1")
         }.openTabDrawer {
             verifyExistingOpenTabs("Test_Page_1")
             swipeTabLeft("Test_Page_1")
@@ -228,9 +211,8 @@ class TabbedBrowsingTest {
             snackBarButtonClick("UNDO")
         }
 
-        mDevice.waitForIdle()
-
         browserScreen {
+            verifyTabCounter("1")
         }.openTabDrawer {
             verifyExistingOpenTabs("Test_Page_1")
         }
