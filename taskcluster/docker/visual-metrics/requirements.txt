@@ -8,7 +8,7 @@ jsonschema==3.2.0 --hash=sha256:4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928f
 numpy==1.18.3 --hash=sha256:a551d8cc267c634774830086da42e4ba157fa41dd3b93982bc9501b284b0c689
 scipy==1.4.1 --hash=sha256:386086e2972ed2db17cebf88610aab7d7f6e2c0ca30042dc9a89cf18dcc363fa
 matplotlib==3.0.3 --hash=sha256:e8d1939262aa6b36d0c51f50a50a43a04b9618d20db31e6c0192b1463067aeef
-opencv-python==4.2.0.34 --hash=sha256:dcb8da8c5ebaa6360c8555547a4c7beb6cd983dd95ba895bb78b86cc8cf3de2b
+opencv-python==4.8.1.78.34 --hash=sha256:dcb8da8c5ebaa6360c8555547a4c7beb6cd983dd95ba895bb78b86cc8cf3de2b
 
 # Transitive dependencies
 importlib_metadata==1.1.0 --hash=sha256:e6ac600a142cf2db707b1998382cc7fc3b02befb7273876e01b8ad10b9652742
